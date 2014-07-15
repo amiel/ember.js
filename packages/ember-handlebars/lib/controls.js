@@ -92,6 +92,33 @@ var helpers = EmberHandlebars.helpers;
 
   See more about [Ember components](api/classes/Ember.Component.html)
 
+  @method input
+  @for Ember.Handlebars.helpers
+  @param {Hash} options
+*/
+export function inputHelper(options) {
+  Ember.assert('You can only pass attributes to the `input` helper, not arguments', arguments.length < 2);
+
+  var hash = options.hash,
+      types = options.hashTypes,
+      inputType = hash.type,
+      onEvent = hash.on;
+
+  delete hash.type;
+  delete hash.on;
+
+  if (inputType === 'checkbox') {
+    // Deprecation warning?
+    return checkboxHelper(options);
+  } else {
+    if (inputType) { hash.type = inputType; }
+    hash.onEvent = onEvent || 'enter';
+    return helpers.view.call(this, TextField, options);
+  }
+}
+
+/*
+ *
 
   ## Use as checkbox
 
@@ -154,29 +181,16 @@ var helpers = EmberHandlebars.helpers;
   ```
 
 
-  @method input
-  @for Ember.Handlebars.helpers
-  @param {Hash} options
-*/
-export function inputHelper(options) {
+ */
+
+export function checkboxHelper(options) {
   Ember.assert('You can only pass attributes to the `input` helper, not arguments', arguments.length < 2);
 
-  var hash = options.hash,
-      types = options.hashTypes,
-      inputType = hash.type,
-      onEvent = hash.on;
+  var hash = options.hash;
+  var types = options.hashTypes;
 
-  delete hash.type;
-  delete hash.on;
-
-  if (inputType === 'checkbox') {
-    Ember.assert("{{input type='checkbox'}} does not support setting `value=someBooleanValue`; you must use `checked=someBooleanValue` instead.", options.hashTypes.value !== 'ID');
-    return helpers.view.call(this, Checkbox, options);
-  } else {
-    if (inputType) { hash.type = inputType; }
-    hash.onEvent = onEvent || 'enter';
-    return helpers.view.call(this, TextField, options);
-  }
+  Ember.assert("{{input type='checkbox'}} does not support setting `value=someBooleanValue`; you must use `checked=someBooleanValue` instead.", types.value !== 'ID');
+  return helpers.view.call(this, Checkbox, options);
 }
 
 /**
@@ -313,7 +327,7 @@ export function inputHelper(options) {
   Internally, `{{textarea}}` creates an instance of `Ember.TextArea`, passing
   arguments from the helper to `Ember.TextArea`'s `create` method. You can
   extend the capabilities of text areas in your application by reopening this
-  class. For example, if you are building a Bootstrap project where `data-*` 
+  class. For example, if you are building a Bootstrap project where `data-*`
   attributes are used, you can globally add support for a `data-*` attribute
   on all `{{textarea}}`s' in your app by reopening `Ember.TextArea` or
   `Ember.TextSupport` and adding it to the `attributeBindings` concatenated

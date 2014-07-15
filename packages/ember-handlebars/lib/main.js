@@ -70,7 +70,8 @@ import TextField from "ember-handlebars/controls/text_field";
 import TextSupport from "ember-handlebars/controls/text_support";
 import {
   inputHelper,
-  textareaHelper
+  textareaHelper,
+  checkboxHelper
 } from "ember-handlebars/controls";
 
 
@@ -156,6 +157,7 @@ EmberHandlebars.registerHelper("yield", yieldHelper);
 EmberHandlebars.registerHelper("view", viewHelper);
 EmberHandlebars.registerHelper("unbound", unboundHelper);
 EmberHandlebars.registerHelper("input", inputHelper);
+EmberHandlebars.registerHelper("checkbox", checkboxHelper);
 EmberHandlebars.registerHelper("textarea", textareaHelper);
 
 // run load hooks
